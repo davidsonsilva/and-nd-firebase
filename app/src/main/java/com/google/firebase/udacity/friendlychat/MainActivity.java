@@ -15,6 +15,7 @@
  */
 package com.google.firebase.udacity.friendlychat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -140,8 +141,6 @@ public class MainActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                 if(firebaseUser != null) {
-                    Toast.makeText(MainActivity.this, "You're now signed in." +
-                            " Welcome to FriendlyChat! ", Toast.LENGTH_SHORT).show();
                     onSignedInitialize(firebaseUser.getDisplayName());
                 }else{
                     onSignedOutCleanup();
@@ -159,8 +158,20 @@ public class MainActivity extends AppCompatActivity {
         };
     }
 
-
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == RC_SIGN_IN) {
+            if(resultCode == RESULT_OK) {
+                Toast.makeText(MainActivity.this, "You're now signed in." +
+                        " Welcome to FriendlyChat! ", Toast.LENGTH_SHORT).show();
+            } else if (resultCode == RESULT_CANCELED){
+                Toast.makeText(MainActivity.this, "Sign in canceled.",
+                        Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
